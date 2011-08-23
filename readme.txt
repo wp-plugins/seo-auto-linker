@@ -14,7 +14,7 @@ SEO Auto Linker is an update to the much loved [SEO Smart Links](http://wordpres
 
 The plugin automatically links words and phrases in your post, page or custom post type content.
 
-The difference is that you no longer have to try and guess what links will appear.  Specify keywords in a comma separated list, type in the URL to which those keywords will link, specify how many links to the specified URL per post, and then specify the post type. SEO Auto Linker does the rest.
+The difference is that you no longer have to try and guess which links will appear.  Specify keywords in a comma separated list, type in the URL to which those keywords will link, specify how many links to the specified URL per post, and then specify the post type. SEO Auto Linker does the rest.
 
 Bugs?  Problems?  [Get in touch](http://pmg.co/contact).
 
