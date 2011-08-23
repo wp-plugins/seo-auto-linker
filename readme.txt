@@ -21,7 +21,7 @@ Bugs?  Problems?  [Get in touch](http://pmg.co/contact).
 == Installation ==
 
 1. Download the `seo-auto-linker.zip` file and unzip it
-2. Upload the `seo-auto-linker` to your `wp-content/plugins` directory
+2. Upload the `seo-auto-linker` folder to your `wp-content/plugins` directory
 3. In the WordPress admin area, click "Plugins" on the menu and activate SEO Auto Linker
 4. Set up your keywords and sit back!
 
