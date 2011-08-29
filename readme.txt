@@ -4,7 +4,7 @@ Donate link: http://www.pwsausa.org/give.htm
 Tags: seo, links, internal links, automatic linking
 Requires at least: 3.2
 Tested up to: 3.2.1
-Stable tag: 0.1
+Stable tag: 0.2
 
 SEO Auto Linker allows you to automagically add links into your content. Great for internal linking!
 
@@ -35,11 +35,16 @@ Sort of.  If you keyword list is `lorem, ipsum`, the word `lorem` OR the word `i
 
 If you add hundreds of keywords, the answer is probably yes.  However, SEO auto linker makes use of several wp_cache functions which, when combined with a persistent caching plugin, should help speed things up.  If you're running a large scale WordPress install, you should probably be using a caching plugin anyway.
 
+
 == Screenshots ==
 
 1. A look at the admin screen
 
 == Changelog ==
+
+= 0.2 =
+* Fixed the replacement so it doesn't break images or inputs
+* Fixed the post type selection for each keyword set
 
 = 0.1 =
 * The very first version.

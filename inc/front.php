@@ -21,29 +21,58 @@ class pmgSeoAutoLinkerFront
 		if( empty( $kws ) ) return $content;
 		
 		// Find all of our <h> tags in the content and replace them with something
-		preg_match_all( '/<h[1-6]>.+?<\/h[1-6]>/', $content, $headers );
+		preg_match_all( '/<h[1-6]>.+?<\/h[1-6]>/i', $content, $headers );
 		if( $headers[0] )
 		{
 			$headers_replacements = array();
 			$counter = 0;
 			foreach( $headers[0] as $h )
 			{
-				$headers_replacements[$h] = "!!!!--seo-auto-links-header-{$counter}--!!!!";
+				$headers_replacements["<!--seo-auto-links-header-{$counter}--!>"] = $h;
 				$counter++;
 			}
-			$filtered_content = str_replace( array_keys( $headers_replacements ), array_values( $headers_replacements ), $content );
+			$filtered_content = str_replace( array_values( $headers_replacements ), array_keys( $headers_replacements ), $content );
 		}
 		else
 		{
 			$filtered_content = $content;
 		}
 		
-		// Add our links
+		// Find all links currently in the content
+		// We'll use the links_counter and links_replacements variables later on too
 		$link_counter = 0;
 		$links_replacements = array();
+		preg_match_all( '/<a(.*?)href="(.*?)"(.*?)>(.*?)<\/a>/i', $filtered_content, $first_links );
+		if( $first_links[0] )
+		{
+			$temp_links = array();
+			foreach( $first_links[0] as $l )
+			{
+				$temp_links["<!--seo-auto-links-link-{$link_counter}-->"] = $l;
+				$link_counter++;
+			}
+			$filtered_content = str_replace( array_values( $temp_links ), array_keys( $temp_links ), $filtered_content );
+			$links_replacements = array_merge( $links_replacements, $temp_links );
+		}
+		
+		// strip out images, form fields, and anythign else that might have text we shouldn't over right
+		$other_counter = 0;
+		$other_replacements = array();
+		preg_match_all( '/<(img|input)(.*?) \/?>/i', $filtered_content, $others );
+		if( $others[0] )
+		{
+			foreach( $others[0] as $i )
+			{
+				$other_replacements["<!--seo-auto-links-others-{$other_counter}-->"] = $i;
+				$other_counter++;
+			}
+			$filtered_content = str_replace( array_values( $other_replacements ), array_keys( $other_replacements ), $filtered_content );
+		}
+		
+		
 		foreach( $kws as $index => $kw )
 		{
-			$nope = isset( $opts[$post->post_type][$index] ) && 'off' == $opts[$post->post_type][$index] ? true : false;
+			$nope = isset( $opts['types'][$index] ) && $post->post_type != $opts['types'][$index] ? true : false;
 			if( $nope ) continue;
 			
 			$url = isset( $opts['url'][$index] ) ? $opts['url'][$index] : false;
@@ -58,7 +87,7 @@ class pmgSeoAutoLinkerFront
 				$temp_links = array();
 				foreach( $links[0] as $l )
 				{
-					$temp_links["!!!!--seo-auto-links-link-{$link_counter}--!!!!"] = $l;
+					$temp_links["<!--seo-auto-links-link-{$link_counter}--!>"] = $l;
 					$link_counter++;
 				}
 				$filtered_content = str_replace( array_values( $temp_links ), array_keys( $temp_links ), $filtered_content );
@@ -72,11 +101,16 @@ class pmgSeoAutoLinkerFront
 		
 		// Put the original <h> tags back in
 		if( $headers[0] )
-			$filtered_content = str_replace( array_values( $headers_replacements ), array_keys( $headers_replacements ), $filtered_content );
+			$filtered_content = str_replace( array_keys( $headers_replacements ), array_values( $headers_replacements ), $filtered_content );
 		
 		// Put links back in
 		if( ! empty( $links_replacements ) )
 			$filtered_content = str_replace( array_keys( $links_replacements ), array_values( $links_replacements ), $filtered_content );
+			
+		if( $others[0] )
+			$filtered_content = str_replace( array_keys( $other_replacements ), array_values( $other_replacements ), $filtered_content );
+		
+		$filtered_content = apply_filters( 'pmg_seo_auto_linker_content', $filtered_content, $content );
 		
 		// set the cache for those folks using persistent caching
 		wp_cache_set( 'autolinker_content_' . $post->ID, $filtered_content, 'autolinker_content' );
