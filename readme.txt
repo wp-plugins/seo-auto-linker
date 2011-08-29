@@ -41,6 +41,10 @@ If you add hundreds of keywords, the answer is probably yes.  However, SEO auto 
 
 == Changelog ==
 
+= 0.2 =
+* Fixed the replacement so it doesn't break images or inputs
+* Fixed the post type selection for each keyword set
+
 = 0.1 =
 * The very first version.
 * Support for automatic linking added
