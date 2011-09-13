@@ -4,7 +4,7 @@ Donate link: http://www.pwsausa.org/give.htm
 Tags: seo, links, internal links, automatic linking
 Requires at least: 3.2
 Tested up to: 3.2.1
-Stable tag: 0.3
+Stable tag: 0.2
 
 SEO Auto Linker allows you to automagically add links into your content. Great for internal linking!
 
@@ -41,9 +41,6 @@ If you add hundreds of keywords, the answer is probably yes.  However, SEO auto 
 
 == Changelog ==
 
-= 0.3 =
-* Fixed a bug that allowed substrings within words to be linked.
-
 = 0.2 =
 * Fixed the replacement so it doesn't break images or inputs
 * Fixed the post type selection for each keyword set
@@ -53,9 +50,6 @@ If you add hundreds of keywords, the answer is probably yes.  However, SEO auto 
 * Support for automatic linking added
 
 == Upgrade Notice ==
-
-= 0.3 =
-Fixes the bug that allowed substrings of words to be linked.
 
 = 0.1 =
 SEO Auto Linker works pretty alright, so maybe you should use it.
