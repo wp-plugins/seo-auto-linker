@@ -11,10 +11,6 @@ class pmgSeoAutoLinkerFront
 		if( ! is_singular() ) return $content;
 		global $post;
 		
-		// If there's persistent caching set up on the server, this will work!
-		if( $filtered_content = wp_cache_get( 'autolinker_content_' . $post->ID, 'autolinker_content' ) )
-			return $filter_content;
-		
 		// set up some more options
 		$opts = get_option( 'pmg_autolinker_options' );
 		$kws = isset( $opts['kw'] ) ? (array) $opts['kw'] : array();
@@ -117,9 +113,6 @@ class pmgSeoAutoLinkerFront
 		}
 		
 		$filtered_content = apply_filters( 'pmg_seo_auto_linker_content', $filtered_content, $content );
-		
-		// set the cache for those folks using persistent caching
-		wp_cache_set( 'autolinker_content_' . $post->ID, $filtered_content, 'autolinker_content' );
 		
 		return $filtered_content;
 	}
