@@ -3,8 +3,8 @@ Contributors: chrisguitarguy, agencypmg
 Donate link: http://www.pwsausa.org/give.htm
 Tags: seo, links, internal links, automatic linking
 Requires at least: 3.2
-Tested up to: 3.2.1
-Stable tag: 0.4
+Tested up to: 3.3.1
+Stable tag: 0.5
 
 SEO Auto Linker allows you to automagically add links into your content. Great for internal linking!
 
@@ -35,11 +35,26 @@ Sort of.  If you keyword list is `lorem, ipsum`, the word `lorem` OR the word `i
 
 If you add hundreds of keywords, the answer is probably yes.  However, SEO auto linker makes use of several wp_cache functions which, when combined with a persistent caching plugin, should help speed things up.  If you're running a large scale WordPress install, you should probably be using a caching plugin anyway.
 
+= This is breaking my HTML! What gives? =
+
+In order to keep things simple, SEO Auto Linker searches for some common elements in your HTML (headings, images, inputs, etc) and removes them before adding links, adding them back later. It can't predict every bit of HTML, unfortunately, so sometimes text in attributes or other text gets linked where it shouldn't.
+
+= Does this automatically link custom fields too? =
+
+Nope. Because custom fields (aka `wp_postmeta`) can be used for so many different things, it doesn't make sense to automatically link that content.
+
 == Screenshots ==
 
 1. A look at the admin screen
 
 == Changelog ==
+
+= 0.5 =
+* Headers with attributes now get caught by the regular expression to prevent linking within them
+* Posts can no longer link to themselves
+
+= 0.4 =
+* caching removed (caused issues with content no showing up)
 
 = 0.3 =
 * Fixed a bug that allowed substrings within words to be linked.
