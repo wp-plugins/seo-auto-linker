@@ -4,7 +4,7 @@ Donate link: http://www.pwsausa.org/give.htm
 Tags: seo, links, internal links, automatic linking
 Requires at least: 3.2
 Tested up to: 3.3.1
-Stable tag: 0.5
+Stable tag: 0.6
 
 SEO Auto Linker allows you to automagically add links into your content. Great for internal linking!
 
@@ -49,6 +49,11 @@ Nope. Because custom fields (aka `wp_postmeta`) can be used for so many differen
 
 == Changelog ==
 
+= 0.6 =
+* Unicode support in keywords
+* Sitewide and keyword specific blacklists. Props to [James](http://jamesb.biz/) for this feature!
+* Shortcodes are now ignored by the plugin, so image captions should no longer break
+
 = 0.5 =
 * Headers with attributes now get caught by the regular expression to prevent linking within them
 * Posts can no longer link to themselves
@@ -68,6 +73,9 @@ Nope. Because custom fields (aka `wp_postmeta`) can be used for so many differen
 * Support for automatic linking added
 
 == Upgrade Notice ==
+
+= 0.6 =
+* Unicode support, no shortcode errors and URI blacklists.
 
 = 0.3 =
 Fixes the bug that allowed substrings of words to be linked.
