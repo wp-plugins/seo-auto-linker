@@ -4,7 +4,7 @@ Donate link: http://www.pwsausa.org/give.htm
 Tags: seo, links, internal links, automatic linking
 Requires at least: 3.2
 Tested up to: 3.3.1
-Stable tag: 0.6.3
+Stable tag: 0.6.4
 
 SEO Auto Linker allows you to automagically add links into your content. Great for internal linking!
 
@@ -49,6 +49,9 @@ Nope. Because custom fields (aka `wp_postmeta`) can be used for so many differen
 
 == Changelog ==
 
+= 0.6.4 =
+* Use `preg_quote` better
+
 = 0.6.3 =
 * Use `preg_quote`
 
@@ -82,6 +85,9 @@ Nope. Because custom fields (aka `wp_postmeta`) can be used for so many differen
 * Support for automatic linking added
 
 == Upgrade Notice ==
+
+== 0.6.4 ==
+* Same as 0.6.4, but a bit better implementation
 
 == 0.6.3 ==
 * certain characters no longer cause errors on the front end
