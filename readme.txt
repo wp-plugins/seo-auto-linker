@@ -3,8 +3,8 @@ Contributors: chrisguitarguy, agencypmg
 Donate link: http://www.pwsausa.org/give.htm
 Tags: seo, links, internal links, automatic linking
 Requires at least: 3.2
-Tested up to: 3.3.1
-Stable tag: 0.6.4
+Tested up to: 3.4
+Stable tag: 0.7
 
 SEO Auto Linker allows you to automagically add links into your content. Great for internal linking!
 
@@ -27,6 +27,10 @@ Bugs?  Problems?  [Get in touch](http://pmg.co/contact).
 
 == Frequently Asked Questions ==
 
+= I just upgraded to 0.7, where did my keywords go? =
+
+Due to some changes that make SEO Auto Linker much more usable (an maintainable), keywords from versions before 0.7 must be migrated.  There is a second plugin included called SEO Auto Linker Migrator that will do this for you.  Just activate it and your done.
+
 = When I specify keywords, will they all get linked? =
 
 Sort of.  If you keyword list is `lorem, ipsum`, the word `lorem` OR the word `ipsum` will be linked to the specified URL.  If the content contains both `lorem` and `ipsum, they will only both be linked if you set the number of links per post to more than one for that keyword list.
@@ -45,20 +49,25 @@ Nope. Because custom fields (aka `wp_postmeta`) can be used for so many differen
 
 == Screenshots ==
 
-1. A look at the admin screen
+1. A look at the admin list of links
+
+2. Editing a link
+
+3. SEO Auto Linker options
 
 == Changelog ==
 
-= 0.6.4 =
-* Use `preg_quote` better
+= 0.7 =
+* New and improved admin area
+* Completed refactored codebase (all new bugs!)
 
 = 0.6.3 =
 * Use `preg_quote`
 
-== 0.6.2 ==
+= 0.6.2 =
 * Fix for some image errors folks were having
 
-== 0.6.1 =
+= 0.6.1 =
 * Fixes bug that caused headers not to display
 
 = 0.6 =
@@ -86,16 +95,17 @@ Nope. Because custom fields (aka `wp_postmeta`) can be used for so many differen
 
 == Upgrade Notice ==
 
-== 0.6.4 ==
-* Same as 0.6.4, but a bit better implementation
+= 0.7 =
+* Backwards incompatible upgrade, you must use another plugin (included) to migrate old keywords
+* Much more usable admin area
 
-== 0.6.3 ==
+= 0.6.3 =
 * certain characters no longer cause errors on the front end
 
-== 0.6.2 ==
+= 0.6.2 =
 * Yet another images fix
 
-== 0.6.1 == 
+= 0.6.1 =
 * Upgrade to fix <h> tag errors
 
 = 0.6 =
