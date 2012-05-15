@@ -30,12 +30,9 @@ class SEO_Auto_Linker_Post_Type extends SEO_Auto_Linker_Base
 
         add_action(
             'save_post',
-            array(get_class(), 'save')
-        );
-
-        add_action(
-            'dbx_post_sidebar',
-            array(get_class(), 'nonce_field')
+            array(get_class(), 'save'),
+            10,
+            2
         );
 
         add_action(
@@ -48,6 +45,16 @@ class SEO_Auto_Linker_Post_Type extends SEO_Auto_Linker_Base
         add_action(
             'load-edit.php',
             array(get_class(), 'load_edit')
+        );
+
+        add_action(
+            'load-post-new.php',
+            array(get_class(), 'no_autosave')
+        );
+
+        add_action(
+            'load-post.php',
+            array(get_class(), 'no_autosave')
         );
 
         add_filter(
@@ -174,6 +181,11 @@ class SEO_Auto_Linker_Post_Type extends SEO_Auto_Linker_Base
             'low'
         );
 
+        add_action(
+            'dbx_post_sidebar',
+            array(get_class(), 'nonce_field')
+        );
+
         self::setup_meta($post);
     }
 
@@ -199,11 +211,28 @@ class SEO_Auto_Linker_Post_Type extends SEO_Auto_Linker_Base
                 array(get_class(), 'bulk_actions')
             );
 
-            // kill views for now @todo maybe?
             add_filter(
                 "views_{$screen->id}",
                 array(get_class(), 'filter_views')
             );
+        }
+    }
+
+    /*
+     * A hack to get rid of the autosave script on the seoal_container post type
+     * edit screen. This script was causing errors and saying that the user was
+     * leaving the page without saving (even when hitting the submit button).
+     *
+     * @uses wp_deregister_script
+     * @since 0.7.1
+     */
+    public static function no_autosave()
+    {
+        global $typenow; // sigh globals
+        if(self::POST_TYPE == $typenow)
+        {
+            // why doesn't `wp_dequeue_script` work?
+            wp_deregister_script('autosave');
         }
     }
 
@@ -216,8 +245,9 @@ class SEO_Auto_Linker_Post_Type extends SEO_Auto_Linker_Base
      * @uses current_user_can
      * @since 0.7
      */
-    public static function save($post_id)
+    public static function save($post_id, $post)
     {
+        if($post->post_type != self::POST_TYPE) return;
         if(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
         if(!current_user_can('manage_options')) return;
         if(!isset($_POST[self::NONCE]) || !wp_verify_nonce($_POST[self::NONCE], self::NONCE)) 
