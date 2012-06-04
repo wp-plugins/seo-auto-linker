@@ -67,8 +67,13 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
             $filtered = self::replace($other_replacements, $filtered);
         }
 
-        foreach(self::$links as $l)
+        foreach(self::$links as $count => $l)
         {
+            if(apply_filters('seoal_should_continue', false, $l, $count))
+            {
+                continue;
+            }
+
             preg_match_all(
                 '/<a(.*?)href="(.*?)"(.*?)>(.*?)<\/a>/iu',
                 $filtered,
@@ -88,9 +93,13 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
             $regex = self::get_kw_regex($l);
             $url = self::get_link_url($l);
             $max = self::get_link_max($l);
+            if(!$regex || !$url || !$max)
+                continue;
+            
+            $target = self::get_link_target($l);
             $filtered = preg_replace(
                 $regex,
-                '$1<a href="' . esc_url( $url ) . '" title="$2">$2</a>$3',
+                '$1<a href="' . esc_url( $url ) . '" title="$2" target="' . $target . '">$2</a>$3',
                 $filtered,
                 absint($max)
             );
@@ -153,13 +162,16 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
             )
         ));
         $rv = array();
-        foreach($links as $l)
+        if($links)
         {
-            $blacklist = self::get_meta($l, 'blacklist');
-            if(!$blacklist || !in_array(self::$permalink, (array)$blacklist))
-                $rv[] = $l;
+            foreach($links as $l)
+            {
+                $blacklist = self::get_meta($l, 'blacklist');
+                if(!$blacklist || !in_array(self::$permalink, (array)$blacklist))
+                    $rv[] = $l;
+            }
         }
-        self::$links = $rv;
+        self::$links = apply_filters('seoal_links', $rv);
     }
 
     /*
@@ -170,6 +182,7 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
     protected static function get_kw_regex($link)
     {
         $keywords = self::get_keywords($link);
+        if(!$keywords) return false;
         return sprintf('/(\b)(%s)(\b)/ui', implode('|', $keywords));
     }
 
@@ -183,7 +196,7 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
         $keywords = self::get_meta($link, 'keywords');
         $kw_arr = explode(',', $keywords);
         $kw_arr = apply_filters('seoal_link_keywords', $kw_arr, $link);
-        $kw_arr = array_map('trim', $kw_arr);
+        $kw_arr = array_map('trim', (array)$kw_arr);
         $kw_arr = array_map('preg_quote', $kw_arr);
         return $kw_arr;
     }
@@ -212,13 +225,43 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
     }
 
     /*
+     * Get the target attribute for a given link
+     *
+     * @since 0.7.2
+     * @return string The escaped target att
+     */
+    protected static function get_link_target($link)
+    {
+        $target = self::get_meta($link, 'target');
+        $target = apply_filters('seoal_link_target', $target, $link);
+        if(!in_array($target, array_keys(self::get_targets())))
+        {
+            $target = '_self';
+        }
+        return esc_attr($target);
+    }
+
+    /*
      * Replace get meta
      *
      * @since 0.7
      */
     protected static function get_meta($post, $key)
     {
-        return get_post_meta($post->ID, self::get_key($key), true);
+        $res = apply_filters('seoal_pre_get_meta', false, $key, $post);
+        if($res !== false)
+        {
+            return $res;
+        }
+        if(isset($post->ID))
+        {
+            $res = get_post_meta($post->ID, self::get_key($key), true);
+        }
+        else
+        {
+            $res = '';
+        }
+        return $res;
     }
 
     /*
