@@ -1,20 +1,27 @@
 <?php
 class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
 {
+    /**
+     * A prefix hash for our SEO autolinker replacements.
+     *
+     * @since   0.8
+     */
+    private static $hash;
+
     /*
      * Container for our post autolinker posts
      */
-    protected static $links;
+    private static $links;
 
     /*
      * Container for our options
      */
-    protected static $opts;
+    private static $opts;
 
     /*
      * Container for the current post's permalink
      */
-    protected static $permalink;
+    private static $permalink;
 
     /*
      * Adds actions and filters and such
@@ -23,6 +30,7 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
      */
     public static function init()
     {
+        self::$hash = md5('seo-auto-linker');
         add_filter(
             'the_content',
             array(get_class(), 'content'),
@@ -46,18 +54,18 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
         $shortcode_replacements = array();
         $filtered = $content;
 
-        preg_match_all('/<h[1-6][^>]*>.+?<\/h[1-6]>/iu', $filtered, $headers);
-        if(!empty($headers[0]))
-        {
-            $header_replacements = self::gen_replacements($headers[0], 'header');
-            $filtered = self::replace($header_replacements, $filtered);
-        }
-
         preg_match_all('/' . get_shortcode_regex() . '/', $filtered, $scodes);
         if(!empty($scodes[0]))
         {
             $shortcode_replacements = self::gen_replacements($scodes[0], 'shortcode');
             $filtered = self::replace($shortcode_replacements, $filtered);
+        }
+
+        preg_match_all('/<h[1-6][^>]*>.+?<\/h[1-6]>/iu', $filtered, $headers);
+        if(!empty($headers[0]))
+        {
+            $header_replacements = self::gen_replacements($headers[0], 'header');
+            $filtered = self::replace($header_replacements, $filtered);
         }
 
         preg_match_all('/<(img|input)(.*?) \/?>/iu', $filtered, $others);
@@ -107,11 +115,11 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
 
         $filtered = apply_filters('seoal_pre_replace', $filtered, $post);
 
-        $filtered = self::replace_bak($link_replacements, $filtered);
-        $filtered = self::replace_bak($header_replacements, $filtered);
         $filtered = self::replace_bak($shortcode_replacements, $filtered);
+        $filtered = self::replace_bak($header_replacements, $filtered);
         $filtered = self::replace_bak($other_replacements, $filtered);
-        
+        $filtered = self::replace_bak($link_replacements, $filtered);
+
         return apply_filters('seoal_post_replace', $filtered, $post);
     }
 
@@ -197,8 +205,13 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
         $kw_arr = explode(',', $keywords);
         $kw_arr = apply_filters('seoal_link_keywords', $kw_arr, $link);
         $kw_arr = array_map('trim', (array)$kw_arr);
-        $kw_arr = array_map('preg_quote', $kw_arr);
-        return $kw_arr;
+        $kw_out = array();
+        foreach($kw_arr as $kw)
+        {
+            // Second argument of `preg_quote`? Does not default to `/`
+            $kw_out[] = preg_quote($kw, '/');
+        }
+        return $kw_out;
     }
 
     /*
@@ -268,14 +281,18 @@ class SEO_Auto_Linker_Front extends SEO_Auto_Linker_Base
      * Loop through a an array of matches and create an associative array of 
      * key value pairs to use for str replacements
      *
+     * @todo Look into just hashing the entire array key with md5 or
+     * something.  Might help avoid conflicts?
+     *
      * @since 0.7
      */
     protected function gen_replacements($arr, $key, $start=0)
     {
         $rv = array();
+        $h = self::$hash;
         foreach($arr as $a)
         {
-            $rv["<!--seo-auto-linker-{$key}-{$start}-->"] = $a;
+            $rv["<!--{$h}-{$key}-{$start}-->"] = $a;
             $start++;
         }
         return $rv;

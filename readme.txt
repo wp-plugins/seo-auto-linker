@@ -4,7 +4,7 @@ Donate link: http://www.pwsausa.org/give.htm
 Tags: seo, links, internal links, automatic linking
 Requires at least: 3.2
 Tested up to: 3.4
-Stable tag: 0.7.2
+Stable tag: 0.8
 
 SEO Auto Linker allows you to automagically add links into your content. Great for internal linking!
 
@@ -47,6 +47,12 @@ In order to keep things simple, SEO Auto Linker searches for some common element
 
 Nope. Because custom fields (aka `wp_postmeta`) can be used for so many different things, it doesn't make sense to automatically link that content.
 
+= Content inside of shortcodes isn't linked, what gives? =
+
+SEO Auto Linker ignores content inside of shortcodes. If you find yourself using shortcodes inside a theme to do things like columns, etc, you may be [doing it wrong](http://justintadlock.com/archives/2011/05/02/dealing-with-shortcode-madness).
+
+This was a deliberate decision and isn't likely to change.
+
 == Screenshots ==
 
 1. A look at the admin list of links
@@ -56,6 +62,10 @@ Nope. Because custom fields (aka `wp_postmeta`) can be used for so many differen
 3. SEO Auto Linker options
 
 == Changelog ==
+
+= 0.8 =
+* A few small bugfixes
+* Removing the migration plugin
 
 = 0.7.2 =
 * Added filters throughout the plugin
@@ -102,6 +112,11 @@ Nope. Because custom fields (aka `wp_postmeta`) can be used for so many differen
 * Support for automatic linking added
 
 == Upgrade Notice ==
+
+= 0.8 =
+* A few bug fixes causing errors with shortcodes
+* Removing the SEO Auto Linker Migraton plugin.
+* If you're upgrading from less than 0.7, you'll need to get 0.7.x first, then upgrade to 0.8. Please see the upgrade notice for 0.7 for more info.
 
 = 0.7.2 =
 * Nothing major -- if you're a developer interested in extending SEO Auto Linker, you should upgrade
