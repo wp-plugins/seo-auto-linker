@@ -3,7 +3,7 @@
 Plugin Name: SEO Auto Linker
 Plugin URI: http://pmg.co/seo-auto-linker
 Description: Allows you to automatically link terms with in your post, page or custom post type content.
-Version: 0.8.1
+Version: 0.8.2
 Author: Christopher Davis
 Author URI: http://christopherdavis.me
 Text Domain: seoal
@@ -54,4 +54,19 @@ function seoal_load_textdomain()
         false,
         dirname(plugin_basename(__FILE__)) . '/lang/'
     );
+}
+
+
+add_action('plugins_loaded', 'seoal_loaded');
+/**
+ * Provides an always safe action into which to hook for plugins that extend
+ * SEO Auto Linker.
+ *
+ * @since   0.8.2
+ * @uses    do_action
+ * @return  null
+ */
+function seoal_loaded()
+{
+    do_action('seoal_loaded');
 }
